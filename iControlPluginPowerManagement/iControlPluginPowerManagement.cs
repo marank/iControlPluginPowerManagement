@@ -30,6 +30,10 @@ namespace iControlPluginPowerManagement {
             }
         }
 
+        public bool Init() {
+            return true;
+        }
+
 
         public void Handle(string[] commands, string ip) {
             switch (commands[0]) {
