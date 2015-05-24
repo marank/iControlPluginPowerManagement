@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using iControlPluginInterface;
+using iControlInterfaces;
 
 using System.Runtime.InteropServices;
 
@@ -22,8 +22,8 @@ namespace iControlPluginPowerManagement {
             }
         }
 
-        private iControlPluginInterface.IiControlPluginHost pluginHost;
-        public iControlPluginInterface.IiControlPluginHost Host {
+        private IiControlPluginHost pluginHost;
+        public IiControlPluginHost Host {
             set {
                 pluginHost = value;
             }
@@ -46,7 +46,7 @@ namespace iControlPluginPowerManagement {
         }
 
 
-        public void Handle(string[] commands, string ip) {
+        public void Handle(string[] commands, IiControlClient client) {
             if (commands[0] == "pwrmngmt") {
                 switch (commands[1]) {
                     case "shutdown":
