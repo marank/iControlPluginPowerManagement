@@ -22,6 +22,12 @@ namespace iControlPluginPowerManagement {
             }
         }
 
+        public string Version {
+            get {
+                return "0.0.1";
+            }
+        }
+
         private IiControlPluginHost pluginHost;
         public IiControlPluginHost Host {
             set {
@@ -32,12 +38,13 @@ namespace iControlPluginPowerManagement {
             }
         }
 
+        private string _configpath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "iControlPluginPowerManagement.config");
+        private Dictionary<string, object> _settings;
+
         public bool Init() {
-            string configFile = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins", "iControlPluginPowerManagement.config");
-            if (System.IO.File.Exists(configFile)) {
-                Dictionary<string, string> settings = pluginHost.DeserializeJSON(configFile);
-                bool value;
-                if (settings.ContainsKey("enabled") && Boolean.TryParse(settings["enabled"], out value) && value == false) {
+            if (System.IO.File.Exists(_configpath)) {
+                _settings = Host.DeserializeJSON(_configpath);
+                if (_settings.ContainsKey("enabled") && Convert.ToBoolean(_settings["enabled"]) == false) {
                     pluginHost.Log("Plugin disabled", this);
                     return false;
                 }
@@ -83,6 +90,16 @@ namespace iControlPluginPowerManagement {
                         break;
                 }
             }
+        }
+
+        public void Enable() {
+            _settings["enabled"] = "true";
+            Host.SerializeJSON(_configpath, _settings);
+        }
+
+        public void Disable() {
+            _settings["enabled"] = "false";
+            Host.SerializeJSON(_configpath, _settings);
         }
     }
 }
